@@ -11,9 +11,9 @@
             tools:context="org.videolan.vlc.gui.BetaWelcomeActivity">
 
         <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:srcCompat="@drawable/ic_stat_vlc"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                app:srcCompat="@drawable/icon"
                 android:id="@+id/imageView6"
                 android:layout_marginTop="16dp"
                 app:layout_constraintTop_toTopOf="parent"
@@ -77,7 +77,7 @@
                 android:textSize="16sp" />
 
         <ImageView
-                android:src="@mipmap/ic_launcher_reporter"
+                android:src="@mipmap/ic_launcher_reporter_foreground"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/imageView7"

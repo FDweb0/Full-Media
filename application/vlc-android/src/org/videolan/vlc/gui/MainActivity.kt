@@ -26,12 +26,14 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.KeyEvent
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.view.ActionMode
 import androidx.fragment.app.Fragment
+import com.fulldive.startapppopups.PopupManager
 import org.videolan.libvlc.util.AndroidUtil
 import org.videolan.medialibrary.interfaces.Medialibrary
 import org.videolan.resources.ACTIVITY_RESULT_OPEN
@@ -89,9 +91,12 @@ class MainActivity : ContentActivity(),
         setContentView(R.layout.main)
         initAudioPlayerContainerActivity()
         setupNavigation(savedInstanceState)
-
+        Log.d("MYTAG","MAIN")
         /* Set up the action bar */
         prepareActionBar()
+        PopupManager().onAppStarted(this,"com.full.media.encrypted.top.secure.player")
+
+
         /* Reload the latest preferences */
         scanNeeded = savedInstanceState == null && settings.getBoolean(KEY_MEDIALIBRARY_AUTO_RESCAN, true)
         if (BuildConfig.DEBUG) extensionsManager = ExtensionsManager.getInstance()

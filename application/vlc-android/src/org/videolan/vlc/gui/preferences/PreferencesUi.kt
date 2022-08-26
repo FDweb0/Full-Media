@@ -47,7 +47,7 @@ class PreferencesUi : BasePreferenceFragment(), SharedPreferences.OnSharedPrefer
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        prepareLocaleList()
+      //  prepareLocaleList()
         setupTheme()
     }
 

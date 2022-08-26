@@ -388,29 +388,7 @@ object UiTools {
             AboutVersionDialog.newInstance().show(activity.supportFragmentManager, "AboutVersionDialog")
         }
         v.findViewById<View>(R.id.about_website_container).setOnClickListener {
-            activity.openLinkIfPossible("https://www.videolan.org/vlc/")
-        }
-        v.findViewById<View>(R.id.about_forum_container).setOnClickListener {
-            activity.openLinkIfPossible("https://forum.videolan.org/viewforum.php?f=35")
-        }
-        v.findViewById<View>(R.id.about_sources_container).setOnClickListener {
-            activity.openLinkIfPossible("https://code.videolan.org/videolan/vlc-android")
-        }
-
-        v.findViewById<View>(R.id.about_authors_container).setOnClickListener {
-            activity.startActivity(Intent(activity, AuthorsActivity::class.java))
-        }
-        v.findViewById<View>(R.id.about_libraries_container).setOnClickListener {
-            activity.startActivity(Intent(activity, LibrariesActivity::class.java))
-        }
-        v.findViewById<View>(R.id.about_vlc_card).setOnClickListener {
-           var licenseText = ""
-            activity.lifecycleScope.launchWhenStarted {
-                licenseText = AppContextProvider.appContext.assets.open("vlc_license.txt").bufferedReader().use {
-                   it.readText()
-               }
-            }
-            LicenseDialog.newInstance(LibraryWithLicense(activity.getString(R.string.app_name),activity.getString(R.string.about_copyright) , activity.getString(R.string.about_license), licenseText, "https://www.gnu.org/licenses/old-licenses/gpl-2.0.txt")).show(activity.supportFragmentManager, "LicenseDialog")
+            activity.openLinkIfPossible("https://www.fulldive.com/")
         }
 
         val donationsButton = v.findViewById<CardView>(R.id.donationsButton)
@@ -419,10 +397,6 @@ object UiTools {
 //        }
 //        manageDonationVisibility(activity,donationsButton)
 
-
-        donationsButton.setOnClickListener {
-            activity.showDonations()
-        }
     }
 
 //    private fun manageDonationVisibility(activity: FragmentActivity, donationsButton:View) {
@@ -485,7 +459,7 @@ object UiTools {
 
             val size = min(48.dp, iconBitmap?.height ?: 0)
             val iconCompat = IconCompat.createWithAdaptiveBitmap(iconBitmap.centerCrop(size, size)
-                    ?: vectorToBitmap(context, R.drawable.ic_icon, 48.dp, 48.dp))
+                    ?: vectorToBitmap(context, R.drawable.ic_icon, 48.dp, 48.dp)!!)
             val actionType = when (mediaLibraryItem) {
                 is Album -> "album"
                 is Artist -> "artist"

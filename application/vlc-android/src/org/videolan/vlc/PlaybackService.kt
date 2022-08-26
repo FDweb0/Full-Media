@@ -139,9 +139,9 @@ class PlaybackService : MediaBrowserServiceCompat(), LifecycleOwner, CoroutineSc
             val action = intent.action ?: return
             val state = intent.getIntExtra("state", 0)
 
-            // skip all headsets events if there is a call
-            val telManager = applicationContext.getSystemService<TelephonyManager>()
-            if (telManager?.callState != TelephonyManager.CALL_STATE_IDLE) return
+//            // skip all headsets events if there is a call
+//            val telManager = applicationContext.getSystemService<TelephonyManager>()
+//            if (telManager?.callState != TelephonyManager.CALL_STATE_IDLE) return
 
             /*
              * Launch the activity if needed
@@ -232,19 +232,24 @@ class PlaybackService : MediaBrowserServiceCompat(), LifecycleOwner, CoroutineSc
 
     val sessionPendingIntent: PendingIntent
         get() {
+            var flag=PendingIntent.FLAG_UPDATE_CURRENT
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                flag= PendingIntent.FLAG_IMMUTABLE
+            }
             return when {
                 playlistManager.player.isVideoPlaying() -> {//PIP
                     val notificationIntent = Intent(this, VideoPlayerActivity::class.java).apply { putExtra(VideoPlayerActivity.FROM_EXTERNAL, true) }
-                    PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+                    PendingIntent.getActivity(this, 0, notificationIntent, flag)
                 }
                 playlistManager.videoBackground || canSwitchToVideo() && !currentMediaHasFlag(MediaWrapper.MEDIA_FORCE_AUDIO) -> {//resume video playback
                     /* Resume VideoPlayerActivity from ACTION_REMOTE_SWITCH_VIDEO intent */
                     val notificationIntent = Intent(ACTION_REMOTE_SWITCH_VIDEO)
-                    PendingIntent.getBroadcast(this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+                    PendingIntent.getBroadcast(this, 0, notificationIntent, flag)
                 }
                 else -> { /* Show audio player */
+
                     val notificationIntent = Intent(this, StartActivity::class.java)
-                    PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+                    PendingIntent.getActivity(this, 0, notificationIntent, flag)
                 }
             }
         }
@@ -583,6 +588,7 @@ class PlaybackService : MediaBrowserServiceCompat(), LifecycleOwner, CoroutineSc
         return super.getApplicationContext().getContextWithLocale(AppContextProvider.locale)
     }
 
+    @SuppressLint("InvalidWakeLockTag")
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate() {
         dispatcher.onServicePreSuperOnCreate()
@@ -743,6 +749,7 @@ class PlaybackService : MediaBrowserServiceCompat(), LifecycleOwner, CoroutineSc
         val notification = if (this::notification.isInitialized && !stopped) notification
         else {
             val pi = if (::playlistManager.isInitialized) sessionPendingIntent else null
+
             NotificationHelper.createPlaybackNotification(ctx, false,
                     ctx.resources.getString(R.string.loading), "", "", null, false, true,
                     true, speed, isPodcastMode, false, enabledActions, null, pi)
@@ -871,7 +878,7 @@ class PlaybackService : MediaBrowserServiceCompat(), LifecycleOwner, CoroutineSc
                 delay(100)
                 if (isPlayingPopup || !notificationShowing) return@launch
                 try {
-                    val title = if (metaData == null) mw.title else metaData.getString(MediaMetadataCompat.METADATA_KEY_TITLE)
+                    var title = if (metaData == null) mw.title else metaData.getString(MediaMetadataCompat.METADATA_KEY_TITLE)
                     val artist = if (metaData == null) mw.artist else metaData.getString(MediaMetadataCompat.METADATA_KEY_ALBUM_ARTIST)
                     val album = if (metaData == null) mw.album else metaData.getString(MediaMetadataCompat.METADATA_KEY_ALBUM)
                     var cover = if (coverOnLockscreen && metaData != null)
@@ -879,8 +886,10 @@ class PlaybackService : MediaBrowserServiceCompat(), LifecycleOwner, CoroutineSc
                     if (coverOnLockscreen && cover == null)
                         cover = AudioUtil.readCoverBitmap(Uri.decode(mw.artworkMrl), 256)
                     if (cover == null || cover.isRecycled)
-                        cover = ctx.getBitmapFromDrawable(R.drawable.ic_no_media)
+                        cover = ctx.getBitmapFromDrawable(R.drawable.ic_widget_icon)
 
+                    //TODO
+                    Log.d("MY TAG","notification")
                     notification = NotificationHelper.createPlaybackNotification(ctx,
                             canSwitchToVideo(), title, artist, album, cover, playing, isPausable,
                             isSeekable, speed, isPodcastMode, seekInCompactView, enabledActions,
@@ -957,7 +966,11 @@ class PlaybackService : MediaBrowserServiceCompat(), LifecycleOwner, CoroutineSc
         val mediaButtonIntent = Intent(Intent.ACTION_MEDIA_BUTTON)
 
         mediaButtonIntent.setClass(this, MediaButtonReceiver::class.java)
-        val mbrIntent = PendingIntent.getBroadcast(this, 0, mediaButtonIntent, 0)
+        var flag=PendingIntent.FLAG_UPDATE_CURRENT
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            flag=PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
+        }
+        val mbrIntent = PendingIntent.getBroadcast(this, 0, mediaButtonIntent, flag)
         val mbrName = ComponentName(this, MediaButtonReceiver::class.java)
         val playbackState = PlaybackStateCompat.Builder()
                 .setActions(enabledActions)
@@ -1038,7 +1051,7 @@ class PlaybackService : MediaBrowserServiceCompat(), LifecycleOwner, CoroutineSc
                     //In case of format not supported
                         bob.putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, cover.copy(cover.config, false))
                     else
-                        bob.putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, ctx.getBitmapFromDrawable(R.drawable.ic_no_media, 512, 512))
+                        bob.putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, ctx.getBitmapFromDrawable(R.drawable.icon, 512, 512))
                 }
             }
             return@withContext bob.build()

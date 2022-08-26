@@ -213,6 +213,8 @@ dependencies {
     androidTestImplementation "androidx.test:rules:$rootProject.ext.testCore"
     androidTestImplementation 'com.jraska:falcon:2.2.0'
     androidTestImplementation 'tools.fastlane:screengrab:2.1.0'
+    implementation 'androidx.media:media:1.6.0'
+    implementation "com.fulldive:popups:1.0.9"
 
 }
 
@@ -226,12 +228,14 @@ static def hostName() {
 }
 
 def revision() {
-    def code = new ByteArrayOutputStream()
-    exec {
-        commandLine 'git', 'rev-parse', '--short', 'HEAD'
-        standardOutput = code
-    }
-    return code.toString()
+//    def code = new ByteArrayOutputStream()
+//    exec {
+//        commandLine 'git', 'rev-parse', '--short', 'HEAD'
+//        standardOutput = code
+//    }
+//    return code.toString()
+
+    return "1.0"
 }
 
 /**

@@ -35,6 +35,7 @@ import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import androidx.core.content.getSystemService
 import androidx.media.session.MediaButtonReceiver
+
 import org.videolan.libvlc.util.AndroidUtil
 import org.videolan.resources.*
 import org.videolan.tools.DrawableCache
@@ -65,9 +66,11 @@ object NotificationHelper {
 
         val piStop = MediaButtonReceiver.buildMediaButtonPendingIntent(ctx, PlaybackStateCompat.ACTION_STOP)
         val builder = NotificationCompat.Builder(ctx, PLAYBACK_SERVICE_CHANNEL_ID)
-        builder.setSmallIcon(if (video) R.drawable.ic_notif_video else R.drawable.ic_notif_audio)
+        builder
+               .setSmallIcon(if (video) R.mipmap.ic_launcher else R.mipmap.ic_launcher)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                 .setContentTitle(title)
+                .setContentText(TextUtils.separatedString('-', artist, album))
                 .setContentText(TextUtils.separatedString('-', artist, album))
                 .setLargeIcon(cover)
                 .setTicker(TextUtils.separatedString('-', title, artist))
@@ -143,13 +146,21 @@ object NotificationHelper {
     private fun buildCustomButtonPendingIntent(ctx: Context, actionId: String): PendingIntent {
         val intent = Intent(CUSTOM_ACTION)
         intent.putExtra(EXTRA_CUSTOM_ACTION_ID, actionId)
-        return PendingIntent.getBroadcast(ctx, actionId.hashCode(), intent, PendingIntent.FLAG_UPDATE_CURRENT)
+        var flag=PendingIntent.FLAG_UPDATE_CURRENT
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            flag=PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
+        }
+        return PendingIntent.getBroadcast(ctx, actionId.hashCode(), intent, flag)
     }
 
     fun createScanNotification(ctx: Context, progressText: String, paused: Boolean): Notification {
         val intent = Intent(Intent.ACTION_VIEW).setClassName(ctx, START_ACTIVITY)
+        var flag=PendingIntent.FLAG_UPDATE_CURRENT
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            flag=PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
+        }
         val scanCompatBuilder = NotificationCompat.Builder(ctx, MEDIALIBRRARY_CHANNEL_ID)
-                .setContentIntent(PendingIntent.getActivity(ctx, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT))
+                .setContentIntent(PendingIntent.getActivity(ctx, 0, intent, flag))
                 .setSmallIcon(R.drawable.ic_notif_scan)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                 .setContentTitle(ctx.getString(R.string.ml_scanning))
@@ -159,7 +170,7 @@ object NotificationHelper {
         scanCompatBuilder.setContentText(progressText)
 
         notificationIntent.action = if (paused) ACTION_RESUME_SCAN else ACTION_PAUSE_SCAN
-        val pi = PendingIntent.getBroadcast(ctx.applicationContext.getContextWithLocale(AppContextProvider.locale), 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+        val pi = PendingIntent.getBroadcast(ctx.applicationContext.getContextWithLocale(AppContextProvider.locale), 0, notificationIntent, flag)
         val playpause = if (paused)
             NotificationCompat.Action(R.drawable.ic_play_notif, ctx.getString(R.string.resume), pi)
         else

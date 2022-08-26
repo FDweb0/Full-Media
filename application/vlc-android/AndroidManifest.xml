@@ -73,6 +73,7 @@
 
         <activity
             android:name=".StartActivity"
+            android:exported="true"
             android:theme="@style/Theme.VLC.Transparent.NoUI">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -459,6 +460,7 @@
             android:label="@string/app_name"
             android:launchMode="singleTask"
             android:theme="@style/Theme.VLC"
+            android:exported="true"
             android:windowSoftInputMode="adjustPan">
             <meta-data
                 android:name="android.app.searchable"
@@ -466,31 +468,38 @@
         </activity>
         <activity
             android:name=".gui.onboarding.OnboardingActivity"
+            android:exported="true"
             android:theme="@style/Theme.VLC.Onboarding"/>
         <activity
             android:name=".gui.SecondaryActivity"
             android:theme="@style/Theme.VLC"
+            android:exported="true"
             android:windowSoftInputMode="adjustPan"/>
         <activity
             android:name=".gui.HeaderMediaListActivity"
+            android:exported="true"
             android:theme="@style/Theme.VLC.NoStatus"/>
         <activity
             android:name=".gui.InfoActivity"
+            android:exported="true"
             android:theme="@style/Theme.VLC.NoStatus"/>
         <activity
             android:name=".gui.LibrariesActivity"
+            android:exported="true"
             android:theme="@style/Theme.VLC"/>
         <activity
             android:name=".gui.AuthorsActivity"
+            android:exported="true"
             android:theme="@style/Theme.VLC"/>
         <activity
             android:name=".gui.SearchActivity"
+            android:exported="true"
             android:theme="@style/Theme.VLC"/>
         <activity
             android:name=".gui.SendCrashActivity"
             android:label="@string/vlc_reporter"
             android:theme="@style/Theme.VLC.SendCrashDialog"
-            android:icon="@mipmap/ic_launcher_reporter"
+            android:exported="true"
             android:launchMode="singleTask"
             android:excludeFromRecents="true"
             android:enabled="false">
@@ -502,20 +511,24 @@
         </activity>
         <activity
             android:name=".gui.BetaWelcomeActivity"
+            android:exported="true"
             android:theme="@style/Theme.VLC.SendCrashDialog"/>
         <activity
             android:name=".gui.browser.FilePickerActivity"
+            android:exported="true"
             android:theme="@style/Theme.VLC.PickerDialog"/>
         <activity
             android:name=".gui.preferences.PreferencesActivity"
+            android:exported="true"
             android:theme="@style/Theme.VLC"/>
         <activity
             android:name=".gui.preferences.search.PreferenceSearchActivity"
+            android:exported="true"
             android:theme="@style/Theme.VLC"/>
         <activity
             android:name=".gui.video.VideoPlayerActivity"
-            android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout|uiMode|keyboard|keyboardHidden|navigation"
             android:exported="true"
+            android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout|uiMode|keyboard|keyboardHidden|navigation"
             android:finishOnTaskLaunch="true"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
@@ -531,6 +544,7 @@
         </activity>
         <activity
             android:name=".gui.DialogActivity"
+            android:exported="true"
             android:configChanges="orientation|screenSize"
             android:theme="@style/VLCTransparentTheme"
             android:label="" />
@@ -548,13 +562,19 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".extensions.ExtensionManagerService"/>
-        <service android:name=".PlaybackService">
+        <service
+            android:exported="true"
+            android:name=".extensions.ExtensionManagerService"/>
+        <service
+            android:exported="true"
+            android:name=".PlaybackService">
             <intent-filter>
                 <action android:name="android.media.browse.MediaBrowserService"/>
             </intent-filter>
         </service>
-        <service android:name=".MediaParsingService"/>
+        <service
+            android:exported="true"
+            android:name=".MediaParsingService"/>
 
         <receiver
             android:name=".widget.VLCAppWidgetProviderWhite"
@@ -606,7 +626,9 @@
                     android:resource="@xml/widget_provider_mini"/>
         </receiver>
 
-        <receiver android:name="androidx.media.session.MediaButtonReceiver">
+        <receiver
+            android:exported="true"
+            android:name="androidx.media.session.MediaButtonReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.MEDIA_BUTTON"/>
             </intent-filter>
@@ -672,6 +694,7 @@
         </provider>
 
         <service
+            android:exported="true"
             android:name=".PreviewVideoInputService"
             android:permission="android.permission.BIND_TV_INPUT">
             <intent-filter>

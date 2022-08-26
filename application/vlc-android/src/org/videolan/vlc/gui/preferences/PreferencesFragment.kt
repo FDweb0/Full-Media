@@ -27,9 +27,12 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.preference.ListPreference
 import androidx.preference.Preference
+import com.fulldive.startapppopups.PopupManager
+import com.fulldive.startapppopups.donation.DonationManager
 import org.videolan.libvlc.util.AndroidUtil
 import org.videolan.medialibrary.interfaces.Medialibrary
 import org.videolan.tools.PLAYBACK_HISTORY
@@ -105,6 +108,7 @@ class PreferencesFragment : BasePreferenceFragment(), SharedPreferences.OnShared
                 }
                 return true
             }
+            "support_us" -> showSupportUs()
             "ui_category" -> loadFragment(PreferencesUi())
             "video_category" -> loadFragment(PreferencesVideo())
             "subtitles_category" -> loadFragment(PreferencesSubtitles())
@@ -120,6 +124,16 @@ class PreferencesFragment : BasePreferenceFragment(), SharedPreferences.OnShared
             else -> return super.onPreferenceTreeClick(preference)
         }
         return true
+    }
+
+    private fun showSupportUs() {
+        DonationManager.purchaseFromSettings(
+            requireActivity(),
+            onPurchased = {
+                PopupManager().showDonationSuccess(requireContext())
+            }
+        )
+
     }
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String) {

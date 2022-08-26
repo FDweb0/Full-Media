@@ -43,7 +43,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_chainStyle="packed"
-            app:srcCompat="@drawable/ic_onboarding_scan" />
+            app:srcCompat="@drawable/ic_icon" />
 
     <TextView
             android:id="@+id/scanning_title"
@@ -94,11 +94,11 @@
             app:layout_constraintVertical_chainStyle="packed" />
 
     <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.66" />
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.64" />
 
     <View
             android:id="@+id/view4"
