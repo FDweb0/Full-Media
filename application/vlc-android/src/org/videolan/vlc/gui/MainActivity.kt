@@ -34,6 +34,7 @@ import android.view.View
 import androidx.appcompat.view.ActionMode
 import androidx.fragment.app.Fragment
 import com.fulldive.startapppopups.PopupManager
+import com.fulldive.startapppopups.donation.DonationManager
 import org.videolan.libvlc.util.AndroidUtil
 import org.videolan.medialibrary.interfaces.Medialibrary
 import org.videolan.resources.ACTIVITY_RESULT_OPEN
@@ -83,6 +84,8 @@ class MainActivity : ContentActivity(),
         return if (view?.id == android.R.id.content && !isTablet()) {if(overAudioPlayer) findViewById(android.R.id.content) else findViewById(R.id.appbar)} else view
     }
 
+
+    val BOTTOM_MARGIN=360
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -94,7 +97,7 @@ class MainActivity : ContentActivity(),
         Log.d("MYTAG","MAIN")
         /* Set up the action bar */
         prepareActionBar()
-        PopupManager().onAppStarted(this,"com.full.media.encrypted.top.secure.player")
+        PopupManager().onAppStarted(this,BuildConfig.APP_ID,donationPopupBottomMarginInPixels=BOTTOM_MARGIN)
 
 
         /* Reload the latest preferences */
@@ -106,6 +109,10 @@ class MainActivity : ContentActivity(),
         WidgetMigration.launchIfNeeded(this)
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        DonationManager.destroy()
+    }
     override fun onResume() {
         super.onResume()
         //Only the partial permission is granted for Android 11+
