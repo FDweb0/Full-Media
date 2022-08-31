@@ -85,7 +85,6 @@ class MainActivity : ContentActivity(),
     }
 
 
-    val BOTTOM_MARGIN=360
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -97,8 +96,7 @@ class MainActivity : ContentActivity(),
         Log.d("MYTAG","MAIN")
         /* Set up the action bar */
         prepareActionBar()
-        PopupManager().onAppStarted(this,BuildConfig.APP_ID,donationPopupBottomMarginInPixels=BOTTOM_MARGIN)
-
+        PopupManager().onAppStarted(this,BuildConfig.APP_ID,donationPopupBottomMarginInPixels=resources.getInteger(R.integer.popup_bottom_margin))
 
         /* Reload the latest preferences */
         scanNeeded = savedInstanceState == null && settings.getBoolean(KEY_MEDIALIBRARY_AUTO_RESCAN, true)
